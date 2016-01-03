@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">BrainFeeder</string>
+    <string name="splash_screen_text">BrainFeeder</string>
+
+    <string name="inscription_button">S\'inscrire</string>
+    <string name="connection_button">Se connecter</string>
+
+    <string name="title_activity_players_board">Informations</string>
+    <string name="menu_logout">Se déconnecter</string>
+    <string name="menu_informations">Informations</string>
+    <string name="menu_friends">Mes amis</string>
+    <string name="menu_notifications">Notifications</string>
+
+
+    <string name="title_activity_main_list">BrainFeeder</string>
+
+    <string name="warning">Attention !</string>
+    <string name="confirm_logout">Es-tu certain de vouloir te déconnecter ?</string>
+    <string name="cancel">Annuler</string>
+    <string name="log_out">Se déconnecter</string>
+
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+
+
+
+
+    <string name="main_activity_description">Tu es connecté (%s)</string>
+
+
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Mot de passe</string>
+    <string name="action_sign_in_short">Connexion</string>
+    <string name="action_sign_in">Se Connecter</string>
+
+
+
+    <!-- Strings related to login -->
+    <string name="tesseract_button">Lancer tesseract</string>
+    <string name="friends_button">Mes amis</string>
+    <string name="title_activity_scan_monster">Scan Monsters</string>
+    <string name="title_activity_inscription">Inscription</string>
+    <string name="title_activity_connection">Connexion</string>
+    <string name="hint_password">Mot de passe</string>
+    <string name="action_signin">S\'inscrire</string>
+    <string name="hint_login">Identifiant</string>
+    <string name="error_invalid_password">Mot de passe incorrect !</string>
+    <string name="error_invalid_login">Identifiant incorrect</string>
+    <string name="error_field_required">Champ requis</string>
+    <string name="error_login_taken">Cet identifiant est déjà utilisé !</string>
+    <string name="action_signup">Se connecter</string>
+    <string name="error_wrong_login_or_password">Erreur d\'Identifiant ou Mot de Passe</string>
+</resources>
