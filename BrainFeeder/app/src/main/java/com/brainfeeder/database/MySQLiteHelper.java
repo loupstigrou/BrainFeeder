@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.brainfeeder.user.User;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,21 +21,23 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     // Database Name
-    private static final String DATABASE_NAME = "ScanMonstersDB";
+    private static final String DATABASE_NAME = "AppDatabase";
+    private static final String KEY_USER_ID = "remoteIdUser";
 
-    private SQLiteDatabase database;
+    private SQLiteDatabase _database;
+    private User _currentUser;
 
-    public MySQLiteHelper(Context context) {
-
+    public MySQLiteHelper(Context context, User user) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        _currentUser = user;
     }
 
     public void open() throws SQLException {
-        database = getWritableDatabase();
+        _database = getWritableDatabase();
     }
 
     public void close() {
-        database.close();
+        _database.close();
     }
 
     @Override
@@ -43,25 +47,24 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         String CREATE_FRIENDS_TABLE = "CREATE TABLE friends ( " +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                KEY_USER_ID+" TEXT, " +
                 "name TEXT, " +
                 "score INT )";
         db.execSQL(CREATE_FRIENDS_TABLE);
-
-        String CREATE_CREATURES_TABLE = "CREATE TABLE creatures ( " +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "name TEXT, " +
-                "quantity INT )";
-        db.execSQL(CREATE_CREATURES_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older books table if existed
         db.execSQL("DROP TABLE IF EXISTS friends");
-        db.execSQL("DROP TABLE IF EXISTS creatures");
 
         // create fresh books table
         this.onCreate(db);
+    }
+
+
+    public String remoteUserClause() {
+        return KEY_USER_ID+" = "+_currentUser.getRemoteId();
     }
     //---------------------------------------------------------------------
 
@@ -69,11 +72,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
      * CRUD operations (create "add", read "get", update, delete) friend
      */
 
-    // Books table name
     private static final String TABLE_FRIENDS= "friends";
-    private static final String TABLE_CREATURES = "creatures";
 
-    // Books Table Columns names
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
     private static final String KEY_SCORE = "score";
@@ -86,6 +86,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put(KEY_USER_ID, _currentUser.getRemoteId());
         values.put(KEY_NAME, friend.name);
         values.put(KEY_SCORE, friend.score);
 
@@ -104,7 +105,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         Cursor cursor =
                 db.query(TABLE_FRIENDS, // a. table
                         COLUMNS, // b. column names
-                        " id = ?", // c. selections
+                        " id = ? AND "+remoteUserClause(), // c. selections
                         new String[]{String.valueOf(id)}, // d. selections args
                         null, // e. group by
                         null, // f. having
@@ -119,7 +120,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         friend.name = (cursor.getString(1));
         friend.score = (cursor.getInt(2));
 
-        Log.d("getBook(" + id + ")", friend.toString());
+        Log.d("getFriend(" + id + ")", friend.toString());
 
         return friend;
     }
@@ -127,7 +128,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public List<Friend> getAllFriends() {
         List<Friend> friends = new ArrayList<>();
 
-        String query = "SELECT * FROM " + TABLE_FRIENDS;
+        String query = "SELECT * FROM " + TABLE_FRIENDS + " WHERE "+remoteUserClause();
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
@@ -158,7 +159,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         int i = db.update(TABLE_FRIENDS, //table
                 values, // column/value
-                KEY_ID + " = ?", // selections
+                KEY_ID + " = ? AND "+remoteUserClause(), // selections
                 new String[]{String.valueOf(friend.id)}); //selection args
         db.close();
         return i;
@@ -167,7 +168,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public void deleteFriend(Friend friend) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_FRIENDS,
-                KEY_ID + " = ?",
+                KEY_ID + " = ? AND "+remoteUserClause(),
                 new String[]{String.valueOf(friend.id)});
         db.close();
         Log.d("deleteFriend", friend.toString());
@@ -175,6 +176,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     public void deleteAllFriends() {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DELETE FROM " + TABLE_FRIENDS + ";");
+        db.execSQL("DELETE FROM " + TABLE_FRIENDS + " WHERE "+remoteUserClause()+";");
     }
 }
