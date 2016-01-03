@@ -20,7 +20,7 @@ public class BaseActivity extends AppCompatActivity {
 
     public SessionManager _session;
     public User _user;
-    public static final String webserviceURL = "http://miralud.com/progMobile/webservice.php";
+    public static final String webserviceURL = "http://miralud.com/progMobile/webserviceBrainFeeder.php";
 
     protected View _currentView;
 

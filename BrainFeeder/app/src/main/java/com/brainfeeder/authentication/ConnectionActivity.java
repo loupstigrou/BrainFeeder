@@ -147,7 +147,8 @@ public class ConnectionActivity extends OfflineActivity implements IServiceCallb
         _userLoginTask = null;
         showProgress(false, progressView, loginFormView);
         if (success) {
-            _session.createLoginSession(_tmpUser);
+            String[] userData = data.split("=");
+            _session.createLoginSession(new User(userData[0], userData[1], _tmpUser.getPassword(), userData[3]));
             Intent intent = new Intent(this, BrainFeederActivity.class);
             startActivity(intent);
             finish();

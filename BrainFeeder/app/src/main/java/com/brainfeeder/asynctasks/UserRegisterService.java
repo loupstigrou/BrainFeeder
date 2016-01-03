@@ -14,9 +14,4 @@ public class UserRegisterService extends BasicService {
                         "&password=" + password +
                         urlParameters;
     }
-
-    @Override
-    protected void onPostExecute(final Boolean success) {
-        super.onPostExecute(success);
-    }
 }

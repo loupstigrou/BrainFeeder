@@ -8,12 +8,8 @@ import android.content.SharedPreferences.Editor;
 import com.brainfeeder.activities.MainActivity;
 
 /**
- * Created by Major on 16/11/2015.
- */
-
-/**
  * Classe qui va gérer les sesssions utilisateurs, afin de pouvoir récupérer les informations
- * de l'utilsateur au sein de toute les activités
+ * de l'utilisateur au sein de toutes les activités
  */
 public class SessionManager {
 
@@ -37,11 +33,10 @@ public class SessionManager {
      */
     // Key for boolean
     private static final String IS_LOGIN = "IsLoggedIn";
-    // User login (make variable public to access from outside)
+
+    public static final String KEY_REMOTE_ID = "remoteId";
     public static final String KEY_LOGIN = "login";
-    // User password
     public static final String KEY_PASSWORD = "password";
-    // User token
     public static final String KEY_TOKEN = "token";
 
     /**
@@ -60,6 +55,7 @@ public class SessionManager {
      */
     public void createLoginSession(User user) {
         this.editor.putBoolean(IS_LOGIN, true);
+        this.editor.putString(KEY_REMOTE_ID, user.getRemoteId());
         this.editor.putString(KEY_LOGIN, user.getLogin());
         this.editor.putString(KEY_PASSWORD, user.getPassword());
         this.editor.putString(KEY_TOKEN, user.getToken());
@@ -92,7 +88,7 @@ public class SessionManager {
      * Return stored _session data
      */
     public User getUser() {
-        return new User(pref.getString(KEY_LOGIN, null), pref.getString(KEY_PASSWORD, null), pref.getString(KEY_TOKEN, null));
+        return new User(pref.getString(KEY_REMOTE_ID, null),pref.getString(KEY_LOGIN, null), pref.getString(KEY_PASSWORD, null), pref.getString(KEY_TOKEN, null));
     }
 
     /**
